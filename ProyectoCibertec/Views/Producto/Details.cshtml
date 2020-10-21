@@ -1,0 +1,50 @@
+﻿@model ProyectoCibertec.Models.Producto
+
+@{
+    ViewBag.Title = "Details";
+}
+
+<h2>Details</h2>
+
+<div>
+    <h4>Producto</h4>
+    <hr />
+    <dl class="dl-horizontal">
+        <dt>
+            @Html.DisplayNameFor(model => model.strDescripcion)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.strDescripcion)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.dblPrecio)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.dblPrecio)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.strUDM)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.strUDM)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.Estado)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.Estado)
+        </dd>
+
+    </dl>
+</div>
+<p>
+    @Html.ActionLink("Edit", "Edit", new { id = Model.idProducto }) |
+    @Html.ActionLink("Back to List", "Index")
+</p>

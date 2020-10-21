@@ -1,0 +1,51 @@
+﻿@model IEnumerable<ProyectoCibertec.Models.Producto>
+
+@{
+    ViewBag.Title = "Sección Producto";
+}
+
+<h2>Mantenimiento de Producto</h2>
+
+<p>
+    @Html.ActionLink("Crear nuevo producto", "Create")
+</p>
+<table class="table">
+    <tr>
+        <th>
+            @Html.DisplayNameFor(model => model.strDescripcion)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.dblPrecio)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.strUDM)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.Estado)
+        </th>
+        <th></th>
+    </tr>
+
+@foreach (var item in Model) {
+    <tr>
+        <td>
+            @Html.DisplayFor(modelItem => item.strDescripcion)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.dblPrecio)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.strUDM)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.Estado)
+        </td>
+        <td>
+            @Html.ActionLink("Editar", "Edit", new { id=item.idProducto }) |
+            @Html.ActionLink("Detalle", "Details", new { id=item.idProducto }) |
+            @Html.ActionLink("Eliminar", "Delete", new { id=item.idProducto })
+        </td>
+    </tr>
+}
+
+</table>

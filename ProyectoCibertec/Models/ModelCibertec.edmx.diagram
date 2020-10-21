@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8"?>
+<edmx:Edmx Version="3.0" xmlns:edmx="http://schemas.microsoft.com/ado/2009/11/edmx">
+ <!-- EF Designer content (DO NOT EDIT MANUALLY BELOW HERE) -->
+  <edmx:Designer xmlns="http://schemas.microsoft.com/ado/2009/11/edmx">
+    <!-- Diagram content (shape and connector positions) -->
+    <edmx:Diagrams>
+      <Diagram DiagramId="d1991f19f6e84603a312ca088e53f5a4" Name="Diagram1">
+        <EntityTypeShape EntityType="cibertec_dbModel.Movimiento" Width="1.5" PointX="1" PointY="0.875" IsExpanded="true" />
+        <EntityTypeShape EntityType="cibertec_dbModel.Orden" Width="1.5" PointX="3.75" PointY="0.75" IsExpanded="true" />
+        <EntityTypeShape EntityType="cibertec_dbModel.OrdenDetalle" Width="1.5" PointX="3.875" PointY="4.125" IsExpanded="true" />
+        <EntityTypeShape EntityType="cibertec_dbModel.Producto" Width="1.5" PointX="0.75" PointY="4.375" IsExpanded="true" />
+        <EntityTypeShape EntityType="cibertec_dbModel.Stock" Width="1.5" PointX="3.125" PointY="7" IsExpanded="true" />
+        <AssociationConnector Association="cibertec_dbModel.FK_Movimiento_Producto" ManuallyRouted="false" />
+        <AssociationConnector Association="cibertec_dbModel.FK_OrdenDetalle_Orden" ManuallyRouted="false" />
+        <AssociationConnector Association="cibertec_dbModel.FK_OrdenDetalle_Producto" ManuallyRouted="false" />
+        <AssociationConnector Association="cibertec_dbModel.FK_Stock_Producto" ManuallyRouted="false" />
+      </Diagram>
+    </edmx:Diagrams>
+  </edmx:Designer>
+</edmx:Edmx>

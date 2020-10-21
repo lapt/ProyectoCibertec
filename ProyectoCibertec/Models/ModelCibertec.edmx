@@ -1,0 +1,332 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<edmx:Edmx Version="3.0" xmlns:edmx="http://schemas.microsoft.com/ado/2009/11/edmx">
+  <!-- EF Runtime content -->
+  <edmx:Runtime>
+    <!-- SSDL content -->
+    <edmx:StorageModels>
+      <Schema Namespace="cibertec_dbModel.Store" Provider="System.Data.SqlClient" ProviderManifestToken="2012" Alias="Self" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm/ssdl">
+        <EntityType Name="Movimiento">
+          <Key>
+            <PropertyRef Name="idMovimiento" />
+          </Key>
+          <Property Name="idMovimiento" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="Producto_idProducto" Type="int" />
+          <Property Name="dblCantidad" Type="numeric" Precision="10" Scale="2" />
+          <Property Name="dtFecha" Type="datetime" />
+        </EntityType>
+        <EntityType Name="Orden">
+          <Key>
+            <PropertyRef Name="idOrden" />
+          </Key>
+          <Property Name="idOrden" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="strNroDoc" Type="varchar" MaxLength="12" />
+          <Property Name="dtFecha" Type="datetime" />
+        </EntityType>
+        <EntityType Name="OrdenDetalle">
+          <Key>
+            <PropertyRef Name="idOrdenDetalle" />
+          </Key>
+          <Property Name="idOrdenDetalle" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="Orden_idOrden" Type="int" />
+          <Property Name="Producto_idProducto" Type="int" />
+          <Property Name="dblCantidad" Type="numeric" Precision="10" Scale="2" />
+        </EntityType>
+        <EntityType Name="Producto">
+          <Key>
+            <PropertyRef Name="idProducto" />
+          </Key>
+          <Property Name="idProducto" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="strDescripcion" Type="nvarchar" MaxLength="100" />
+          <Property Name="dblPrecio" Type="numeric" Precision="10" Scale="2" />
+          <Property Name="strUDM" Type="varchar" MaxLength="12" />
+          <Property Name="Estado" Type="bit" />
+        </EntityType>
+        <EntityType Name="Stock">
+          <Key>
+            <PropertyRef Name="idStock" />
+          </Key>
+          <Property Name="idStock" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="Producto_idProducto" Type="int" />
+          <Property Name="dblCantidad" Type="numeric" Precision="10" Scale="2" />
+          <Property Name="dtFechaAct" Type="datetime" />
+        </EntityType>
+        <Association Name="FK_Movimiento_Producto">
+          <End Role="Producto" Type="Self.Producto" Multiplicity="0..1" />
+          <End Role="Movimiento" Type="Self.Movimiento" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Producto">
+              <PropertyRef Name="idProducto" />
+            </Principal>
+            <Dependent Role="Movimiento">
+              <PropertyRef Name="Producto_idProducto" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_OrdenDetalle_Orden">
+          <End Role="Orden" Type="Self.Orden" Multiplicity="0..1" />
+          <End Role="OrdenDetalle" Type="Self.OrdenDetalle" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Orden">
+              <PropertyRef Name="idOrden" />
+            </Principal>
+            <Dependent Role="OrdenDetalle">
+              <PropertyRef Name="Orden_idOrden" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_OrdenDetalle_Producto">
+          <End Role="Producto" Type="Self.Producto" Multiplicity="0..1" />
+          <End Role="OrdenDetalle" Type="Self.OrdenDetalle" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Producto">
+              <PropertyRef Name="idProducto" />
+            </Principal>
+            <Dependent Role="OrdenDetalle">
+              <PropertyRef Name="Producto_idProducto" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_Stock_Producto">
+          <End Role="Producto" Type="Self.Producto" Multiplicity="0..1" />
+          <End Role="Stock" Type="Self.Stock" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Producto">
+              <PropertyRef Name="idProducto" />
+            </Principal>
+            <Dependent Role="Stock">
+              <PropertyRef Name="Producto_idProducto" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <EntityContainer Name="cibertec_dbModelStoreContainer">
+          <EntitySet Name="Movimiento" EntityType="Self.Movimiento" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="Orden" EntityType="Self.Orden" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="OrdenDetalle" EntityType="Self.OrdenDetalle" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="Producto" EntityType="Self.Producto" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="Stock" EntityType="Self.Stock" Schema="dbo" store:Type="Tables" />
+          <AssociationSet Name="FK_Movimiento_Producto" Association="Self.FK_Movimiento_Producto">
+            <End Role="Producto" EntitySet="Producto" />
+            <End Role="Movimiento" EntitySet="Movimiento" />
+          </AssociationSet>
+          <AssociationSet Name="FK_OrdenDetalle_Orden" Association="Self.FK_OrdenDetalle_Orden">
+            <End Role="Orden" EntitySet="Orden" />
+            <End Role="OrdenDetalle" EntitySet="OrdenDetalle" />
+          </AssociationSet>
+          <AssociationSet Name="FK_OrdenDetalle_Producto" Association="Self.FK_OrdenDetalle_Producto">
+            <End Role="Producto" EntitySet="Producto" />
+            <End Role="OrdenDetalle" EntitySet="OrdenDetalle" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Stock_Producto" Association="Self.FK_Stock_Producto">
+            <End Role="Producto" EntitySet="Producto" />
+            <End Role="Stock" EntitySet="Stock" />
+          </AssociationSet>
+        </EntityContainer>
+      </Schema>
+    </edmx:StorageModels>
+    <!-- CSDL content -->
+    <edmx:ConceptualModels>
+      <Schema Namespace="cibertec_dbModel" Alias="Self" annotation:UseStrongSpatialTypes="false" xmlns:annotation="http://schemas.microsoft.com/ado/2009/02/edm/annotation" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm">
+        <EntityType Name="Movimiento">
+          <Key>
+            <PropertyRef Name="idMovimiento" />
+          </Key>
+          <Property Name="idMovimiento" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="Producto_idProducto" Type="Int32" />
+          <Property Name="dblCantidad" Type="Decimal" Precision="10" Scale="2" />
+          <Property Name="dtFecha" Type="DateTime" Precision="3" />
+          <NavigationProperty Name="Producto" Relationship="Self.FK_Movimiento_Producto" FromRole="Movimiento" ToRole="Producto" />
+        </EntityType>
+        <EntityType Name="Orden">
+          <Key>
+            <PropertyRef Name="idOrden" />
+          </Key>
+          <Property Name="idOrden" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="strNroDoc" Type="String" MaxLength="12" FixedLength="false" Unicode="false" />
+          <Property Name="dtFecha" Type="DateTime" Precision="3" />
+          <NavigationProperty Name="OrdenDetalle" Relationship="Self.FK_OrdenDetalle_Orden" FromRole="Orden" ToRole="OrdenDetalle" />
+        </EntityType>
+        <EntityType Name="OrdenDetalle">
+          <Key>
+            <PropertyRef Name="idOrdenDetalle" />
+          </Key>
+          <Property Name="idOrdenDetalle" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="Orden_idOrden" Type="Int32" />
+          <Property Name="Producto_idProducto" Type="Int32" />
+          <Property Name="dblCantidad" Type="Decimal" Precision="10" Scale="2" />
+          <NavigationProperty Name="Orden" Relationship="Self.FK_OrdenDetalle_Orden" FromRole="OrdenDetalle" ToRole="Orden" />
+          <NavigationProperty Name="Producto" Relationship="Self.FK_OrdenDetalle_Producto" FromRole="OrdenDetalle" ToRole="Producto" />
+        </EntityType>
+        <EntityType Name="Producto">
+          <Key>
+            <PropertyRef Name="idProducto" />
+          </Key>
+          <Property Name="idProducto" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="strDescripcion" Type="String" MaxLength="100" FixedLength="false" Unicode="true" />
+          <Property Name="dblPrecio" Type="Decimal" Precision="10" Scale="2" />
+          <Property Name="strUDM" Type="String" MaxLength="12" FixedLength="false" Unicode="false" />
+          <Property Name="Estado" Type="Boolean" />
+          <NavigationProperty Name="Movimiento" Relationship="Self.FK_Movimiento_Producto" FromRole="Producto" ToRole="Movimiento" />
+          <NavigationProperty Name="OrdenDetalle" Relationship="Self.FK_OrdenDetalle_Producto" FromRole="Producto" ToRole="OrdenDetalle" />
+          <NavigationProperty Name="Stock" Relationship="Self.FK_Stock_Producto" FromRole="Producto" ToRole="Stock" />
+        </EntityType>
+        <EntityType Name="Stock">
+          <Key>
+            <PropertyRef Name="idStock" />
+          </Key>
+          <Property Name="idStock" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="Producto_idProducto" Type="Int32" />
+          <Property Name="dblCantidad" Type="Decimal" Precision="10" Scale="2" />
+          <Property Name="dtFechaAct" Type="DateTime" Precision="3" />
+          <NavigationProperty Name="Producto" Relationship="Self.FK_Stock_Producto" FromRole="Stock" ToRole="Producto" />
+        </EntityType>
+        <Association Name="FK_Movimiento_Producto">
+          <End Role="Producto" Type="Self.Producto" Multiplicity="0..1" />
+          <End Role="Movimiento" Type="Self.Movimiento" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Producto">
+              <PropertyRef Name="idProducto" />
+            </Principal>
+            <Dependent Role="Movimiento">
+              <PropertyRef Name="Producto_idProducto" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_OrdenDetalle_Orden">
+          <End Role="Orden" Type="Self.Orden" Multiplicity="0..1" />
+          <End Role="OrdenDetalle" Type="Self.OrdenDetalle" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Orden">
+              <PropertyRef Name="idOrden" />
+            </Principal>
+            <Dependent Role="OrdenDetalle">
+              <PropertyRef Name="Orden_idOrden" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_OrdenDetalle_Producto">
+          <End Role="Producto" Type="Self.Producto" Multiplicity="0..1" />
+          <End Role="OrdenDetalle" Type="Self.OrdenDetalle" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Producto">
+              <PropertyRef Name="idProducto" />
+            </Principal>
+            <Dependent Role="OrdenDetalle">
+              <PropertyRef Name="Producto_idProducto" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_Stock_Producto">
+          <End Role="Producto" Type="Self.Producto" Multiplicity="0..1" />
+          <End Role="Stock" Type="Self.Stock" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Producto">
+              <PropertyRef Name="idProducto" />
+            </Principal>
+            <Dependent Role="Stock">
+              <PropertyRef Name="Producto_idProducto" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <EntityContainer Name="cibertec_dbEntities" annotation:LazyLoadingEnabled="true">
+          <EntitySet Name="Movimiento" EntityType="Self.Movimiento" />
+          <EntitySet Name="Orden" EntityType="Self.Orden" />
+          <EntitySet Name="OrdenDetalle" EntityType="Self.OrdenDetalle" />
+          <EntitySet Name="Producto" EntityType="Self.Producto" />
+          <EntitySet Name="Stock" EntityType="Self.Stock" />
+          <AssociationSet Name="FK_Movimiento_Producto" Association="Self.FK_Movimiento_Producto">
+            <End Role="Producto" EntitySet="Producto" />
+            <End Role="Movimiento" EntitySet="Movimiento" />
+          </AssociationSet>
+          <AssociationSet Name="FK_OrdenDetalle_Orden" Association="Self.FK_OrdenDetalle_Orden">
+            <End Role="Orden" EntitySet="Orden" />
+            <End Role="OrdenDetalle" EntitySet="OrdenDetalle" />
+          </AssociationSet>
+          <AssociationSet Name="FK_OrdenDetalle_Producto" Association="Self.FK_OrdenDetalle_Producto">
+            <End Role="Producto" EntitySet="Producto" />
+            <End Role="OrdenDetalle" EntitySet="OrdenDetalle" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Stock_Producto" Association="Self.FK_Stock_Producto">
+            <End Role="Producto" EntitySet="Producto" />
+            <End Role="Stock" EntitySet="Stock" />
+          </AssociationSet>
+        </EntityContainer>
+      </Schema>
+    </edmx:ConceptualModels>
+    <!-- C-S mapping content -->
+    <edmx:Mappings>
+      <Mapping Space="C-S" xmlns="http://schemas.microsoft.com/ado/2009/11/mapping/cs">
+        <EntityContainerMapping StorageEntityContainer="cibertec_dbModelStoreContainer" CdmEntityContainer="cibertec_dbEntities">
+          <EntitySetMapping Name="Movimiento">
+            <EntityTypeMapping TypeName="cibertec_dbModel.Movimiento">
+              <MappingFragment StoreEntitySet="Movimiento">
+                <ScalarProperty Name="idMovimiento" ColumnName="idMovimiento" />
+                <ScalarProperty Name="Producto_idProducto" ColumnName="Producto_idProducto" />
+                <ScalarProperty Name="dblCantidad" ColumnName="dblCantidad" />
+                <ScalarProperty Name="dtFecha" ColumnName="dtFecha" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="Orden">
+            <EntityTypeMapping TypeName="cibertec_dbModel.Orden">
+              <MappingFragment StoreEntitySet="Orden">
+                <ScalarProperty Name="idOrden" ColumnName="idOrden" />
+                <ScalarProperty Name="strNroDoc" ColumnName="strNroDoc" />
+                <ScalarProperty Name="dtFecha" ColumnName="dtFecha" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="OrdenDetalle">
+            <EntityTypeMapping TypeName="cibertec_dbModel.OrdenDetalle">
+              <MappingFragment StoreEntitySet="OrdenDetalle">
+                <ScalarProperty Name="idOrdenDetalle" ColumnName="idOrdenDetalle" />
+                <ScalarProperty Name="Orden_idOrden" ColumnName="Orden_idOrden" />
+                <ScalarProperty Name="Producto_idProducto" ColumnName="Producto_idProducto" />
+                <ScalarProperty Name="dblCantidad" ColumnName="dblCantidad" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="Producto">
+            <EntityTypeMapping TypeName="cibertec_dbModel.Producto">
+              <MappingFragment StoreEntitySet="Producto">
+                <ScalarProperty Name="idProducto" ColumnName="idProducto" />
+                <ScalarProperty Name="strDescripcion" ColumnName="strDescripcion" />
+                <ScalarProperty Name="dblPrecio" ColumnName="dblPrecio" />
+                <ScalarProperty Name="strUDM" ColumnName="strUDM" />
+                <ScalarProperty Name="Estado" ColumnName="Estado" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="Stock">
+            <EntityTypeMapping TypeName="cibertec_dbModel.Stock">
+              <MappingFragment StoreEntitySet="Stock">
+                <ScalarProperty Name="idStock" ColumnName="idStock" />
+                <ScalarProperty Name="Producto_idProducto" ColumnName="Producto_idProducto" />
+                <ScalarProperty Name="dblCantidad" ColumnName="dblCantidad" />
+                <ScalarProperty Name="dtFechaAct" ColumnName="dtFechaAct" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+        </EntityContainerMapping>
+      </Mapping>
+    </edmx:Mappings>
+  </edmx:Runtime>
+  <!-- EF Designer content (DO NOT EDIT MANUALLY BELOW HERE) -->
+  <Designer xmlns="http://schemas.microsoft.com/ado/2009/11/edmx">
+    <Connection>
+      <DesignerInfoPropertySet>
+        <DesignerProperty Name="MetadataArtifactProcessing" Value="EmbedInOutputAssembly" />
+      </DesignerInfoPropertySet>
+    </Connection>
+    <Options>
+      <DesignerInfoPropertySet>
+        <DesignerProperty Name="ValidateOnBuild" Value="true" />
+        <DesignerProperty Name="EnablePluralization" Value="false" />
+        <DesignerProperty Name="IncludeForeignKeysInModel" Value="true" />
+        <DesignerProperty Name="UseLegacyProvider" Value="false" />
+        <DesignerProperty Name="CodeGenerationStrategy" Value="Ninguno" />
+      </DesignerInfoPropertySet>
+    </Options>
+    <!-- Diagram content (shape and connector positions) -->
+    <Diagrams></Diagrams>
+  </Designer>
+</edmx:Edmx>
