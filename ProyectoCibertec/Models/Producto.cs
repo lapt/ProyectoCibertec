@@ -22,14 +22,22 @@ namespace ProyectoCibertec.Models
             this.OrdenDetalle = new HashSet<OrdenDetalle>();
             this.Stock = new HashSet<Stock>();
         }
-    
+        [Key]
         public int idProducto { get; set; }
+
+        [Required]
         [Display(Name = "Descripción")]
         public string strDescripcion { get; set; }
+
+        [Required]
         [Display(Name = "Precio")]
         public Nullable<decimal> dblPrecio { get; set; }
+
+        [Required]
         [Display(Name = "UDM")]
         public string strUDM { get; set; }
+
+        [Required]
         [Display(Name = "Estado")]
         public Nullable<bool> Estado { get; set; }
     
