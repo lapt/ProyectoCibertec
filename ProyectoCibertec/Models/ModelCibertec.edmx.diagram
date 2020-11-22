@@ -14,6 +14,7 @@
         <AssociationConnector Association="cibertec_dbModel.FK_OrdenDetalle_Orden" ManuallyRouted="false" />
         <AssociationConnector Association="cibertec_dbModel.FK_OrdenDetalle_Producto" ManuallyRouted="false" />
         <AssociationConnector Association="cibertec_dbModel.FK_Stock_Producto" ManuallyRouted="false" />
+        <EntityTypeShape EntityType="cibertec_dbModel.AspNetUsers" Width="1.5" PointX="6.875" PointY="1.125" />
       </Diagram>
     </edmx:Diagrams>
   </edmx:Designer>

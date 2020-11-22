@@ -11,7 +11,7 @@ namespace ProyectoCibertec.Models
 {
     using System;
     using System.Collections.Generic;
-    using System.ComponentModel.DataAnnotations;
+    using System.ComponentModel;
 
     public partial class Producto
     {
@@ -22,23 +22,15 @@ namespace ProyectoCibertec.Models
             this.OrdenDetalle = new HashSet<OrdenDetalle>();
             this.Stock = new HashSet<Stock>();
         }
-        [Key]
+    
         public int idProducto { get; set; }
-
-        [Required]
-        [Display(Name = "Descripción")]
+        [DisplayName("Descripción")]
         public string strDescripcion { get; set; }
-
-        [Required]
-        [Display(Name = "Precio")]
+        [DisplayName("Precio")]
         public Nullable<decimal> dblPrecio { get; set; }
-
-        [Required]
-        [Display(Name = "UDM")]
+        [DisplayName("UDM")]
         public string strUDM { get; set; }
-
-        [Required]
-        [Display(Name = "Estado")]
+        [DisplayName("Estado")]
         public Nullable<bool> Estado { get; set; }
     
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]

@@ -1,0 +1,16 @@
+﻿
+@{
+    ViewBag.Title = "AsignarRol";
+}
+
+<h2>Asignar Rol a Usuario</h2>
+@using (Html.BeginForm())
+{
+    <section>
+        <label>Email:</label><input name="txtEmail" /><br />
+        <label>Seleccionar Rol:</label>@Html.DropDownList("RolNombre",(IEnumerable<SelectListItem>)ViewBag.roles))
+        <input type="submit" value="Crear Rol" />
+    </section>
+}
+
+

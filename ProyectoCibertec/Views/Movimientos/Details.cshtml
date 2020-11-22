@@ -1,0 +1,42 @@
+﻿@model ProyectoCibertec.Models.Movimiento
+
+@{
+    ViewBag.Title = "Details";
+}
+
+<h2>Details</h2>
+
+<div>
+    <h4>Movimiento</h4>
+    <hr />
+    <dl class="dl-horizontal">
+        <dt>
+            @Html.DisplayNameFor(model => model.dblCantidad)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.dblCantidad)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.dtFecha)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.dtFecha)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.Producto.strDescripcion)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.Producto.strDescripcion)
+        </dd>
+
+    </dl>
+</div>
+<p>
+    @Html.ActionLink("Edit", "Edit", new { id = Model.idMovimiento }) |
+    @Html.ActionLink("Back to List", "Index")
+</p>

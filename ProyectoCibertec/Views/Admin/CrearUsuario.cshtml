@@ -1,0 +1,16 @@
+﻿
+@{
+    ViewBag.Title = "CrearUsuario";
+}
+
+<h2>Crear Nuevo Usuario</h2>
+
+@using (Html.BeginForm())
+{
+    <section>
+        <label>Email:</label><input name="txtEmail"/><br />
+        <label>Contraseña:</label><input type="password" name="txtPassword"/><br />
+        <input type="submit" value="Crear Usuario"/>
+    </section>
+}
+

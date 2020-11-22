@@ -12,107 +12,113 @@ using ProyectoCibertec.Models;
 namespace ProyectoCibertec.Controllers
 {
     [Authorize(Roles = "Admin")]
-    public class ProductoController : Controller
+    public class MovimientosController : Controller
     {
         private cibertec_dbEntities db = new cibertec_dbEntities();
 
-        // GET: Productoes
+        // GET: Movimientos
         public async Task<ActionResult> Index()
         {
-            return View(await db.Producto.ToListAsync());
+            var movimiento = db.Movimiento.Include(m => m.Producto);
+            return View(await movimiento.ToListAsync());
         }
 
-        // GET: Productoes/Details/5
+        // GET: Movimientos/Details/5
         public async Task<ActionResult> Details(int? id)
         {
             if (id == null)
             {
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }
-            Producto producto = await db.Producto.FindAsync(id);
-            if (producto == null)
+            Movimiento movimiento = await db.Movimiento.FindAsync(id);
+            if (movimiento == null)
             {
                 return HttpNotFound();
             }
-            return View(producto);
+            return View(movimiento);
         }
 
-        // GET: Productoes/Create
+        // GET: Movimientos/Create
         public ActionResult Create()
         {
+            ViewBag.Producto_idProducto = new SelectList(db.Producto, "idProducto", "strDescripcion");
+            ViewData["fechaActual"] = DateTime.Now.ToString("yyyy-MM-dd");
             return View();
         }
 
-        // POST: Productoes/Create
+        // POST: Movimientos/Create
         // Para protegerse de ataques de publicación excesiva, habilite las propiedades específicas a las que desea enlazarse. Para obtener 
         // más información vea https://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<ActionResult> Create([Bind(Include = "idProducto,strDescripcion,dblPrecio,strUDM,Estado")] Producto producto)
+        public async Task<ActionResult> Create([Bind(Include = "idMovimiento,Producto_idProducto,dblCantidad,dtFecha")] Movimiento movimiento)
         {
             if (ModelState.IsValid)
             {
-                db.Producto.Add(producto);
+                db.Movimiento.Add(movimiento);
                 await db.SaveChangesAsync();
                 return RedirectToAction("Index");
             }
 
-            return View(producto);
+            ViewBag.Producto_idProducto = new SelectList(db.Producto, "idProducto", "strDescripcion", movimiento.Producto_idProducto);
+            return View(movimiento);
         }
 
-        // GET: Productoes/Edit/5
+        // GET: Movimientos/Edit/5
         public async Task<ActionResult> Edit(int? id)
         {
             if (id == null)
             {
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }
-            Producto producto = await db.Producto.FindAsync(id);
-            if (producto == null)
+            Movimiento movimiento = await db.Movimiento.FindAsync(id);
+            if (movimiento == null)
             {
                 return HttpNotFound();
             }
-            return View(producto);
+            ViewBag.Producto_idProducto = new SelectList(db.Producto, "idProducto", "strDescripcion", movimiento.Producto_idProducto);
+            return View(movimiento);
         }
 
-        // POST: Productoes/Edit/5
+        // POST: Movimientos/Edit/5
         // Para protegerse de ataques de publicación excesiva, habilite las propiedades específicas a las que desea enlazarse. Para obtener 
         // más información vea https://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<ActionResult> Edit([Bind(Include = "idProducto,strDescripcion,dblPrecio,strUDM,Estado")] Producto producto)
+        public async Task<ActionResult> Edit([Bind(Include = "idMovimiento,Producto_idProducto,dblCantidad,dtFecha")] Movimiento movimiento)
         {
             if (ModelState.IsValid)
             {
-                db.Entry(producto).State = EntityState.Modified;
+                db.Entry(movimiento).State = EntityState.Modified;
                 await db.SaveChangesAsync();
                 return RedirectToAction("Index");
             }
-            return View(producto);
+            ViewBag.Producto_idProducto = new SelectList(db.Producto, "idProducto", "strDescripcion", movimiento.Producto_idProducto);
+            return View(movimiento);
         }
 
-        // GET: Productoes/Delete/5
+        // GET: Movimientos/Delete/5
         public async Task<ActionResult> Delete(int? id)
         {
             if (id == null)
             {
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }
-            Producto producto = await db.Producto.FindAsync(id);
-            if (producto == null)
+            Movimiento movimiento = await db.Movimiento.FindAsync(id);
+            if (movimiento == null)
             {
                 return HttpNotFound();
             }
-            return View(producto);
+            return View(movimiento);
         }
 
-        // POST: Productoes/Delete/5
+        // POST: Movimientos/Delete/5
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
         public async Task<ActionResult> DeleteConfirmed(int id)
         {
-            Producto producto = await db.Producto.FindAsync(id);
-            db.Producto.Remove(producto);
+            Movimiento movimiento = await db.Movimiento.FindAsync(id);
+            db.Movimiento.Remove(movimiento);
             await db.SaveChangesAsync();
             return RedirectToAction("Index");
         }

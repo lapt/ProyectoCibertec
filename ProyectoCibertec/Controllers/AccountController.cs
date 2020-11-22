@@ -5,18 +5,22 @@ using System.Security.Claims;
 using System.Threading.Tasks;
 using System.Web;
 using System.Web.Mvc;
+using Microsoft.Ajax.Utilities;
 using Microsoft.AspNet.Identity;
+using Microsoft.AspNet.Identity.EntityFramework;
 using Microsoft.AspNet.Identity.Owin;
 using Microsoft.Owin.Security;
 using ProyectoCibertec.Models;
 
 namespace ProyectoCibertec.Controllers
 {
+
     [Authorize]
     public class AccountController : Controller
     {
         private ApplicationSignInManager _signInManager;
         private ApplicationUserManager _userManager;
+        ApplicationDbContext contexto = new ApplicationDbContext();
 
         public AccountController()
         {
@@ -72,6 +76,13 @@ namespace ProyectoCibertec.Controllers
             {
                 return View(model);
             }
+            var usuario = contexto.Users.Where(x => x.Email == model.Email).FirstOrDefault();
+            if (usuario.LockoutEnabled)
+            {
+                ModelState.AddModelError("", "Error: El usuario esta desactivado.");
+                return View(model);
+            }
+
 
             // No cuenta los errores de inicio de sesión para el bloqueo de la cuenta
             // Para permitir que los errores de contraseña desencadenen el bloqueo de la cuenta, cambie a shouldLockout: true
@@ -149,27 +160,57 @@ namespace ProyectoCibertec.Controllers
         [ValidateAntiForgeryToken]
         public async Task<ActionResult> Register(RegisterViewModel model)
         {
+            var usuario = contexto.Users.Where(x => x.Email == model.Email).FirstOrDefault();
+
+
+            if(usuario != null)
+            {
+                if (!usuario.LockoutEnabled)
+                {
+                    ModelState.AddModelError("Email", "El correo electronico ya esta registrado y activo, intente con otro");
+                    return View(model);
+                }
+                else
+                {
+                    usuario.LockoutEnabled = false;
+                    contexto.SaveChanges();
+                    ModelState.AddModelError("Reactivar", "Su usuario ya exisitia y a vuelto ser activado... puede iniciar sesión.");
+                    return View(model);
+                }
+            }
+            
+
+
+
             if (ModelState.IsValid)
             {
                 var user = new ApplicationUser { UserName = model.Email, Email = model.Email };
-                var result = await UserManager.CreateAsync(user, model.Password);
+                var result = CrearAdminUser(user, model.Password);
                 if (result.Succeeded)
                 {
-                    await SignInManager.SignInAsync(user, isPersistent:false, rememberBrowser:false);
+                    await SignInManager.SignInAsync(user, isPersistent:false, rememberBrowser:false);                   
                     
-                    // Para obtener más información sobre cómo habilitar la confirmación de cuentas y el restablecimiento de contraseña, visite https://go.microsoft.com/fwlink/?LinkID=320771
-                    // Enviar correo electrónico con este vínculo
-                    // string code = await UserManager.GenerateEmailConfirmationTokenAsync(user.Id);
-                    // var callbackUrl = Url.Action("ConfirmEmail", "Account", new { userId = user.Id, code = code }, protocol: Request.Url.Scheme);
-                    // await UserManager.SendEmailAsync(user.Id, "Confirmar cuenta", "Para confirmar la cuenta, haga clic <a href=\"" + callbackUrl + "\">aquí</a>");
-
-                    return RedirectToAction("Index", "Home");
+                    return RedirectToAction("Index", "Producto");
                 }
                 AddErrors(result);
             }
 
             // Si llegamos a este punto, es que se ha producido un error y volvemos a mostrar el formulario
             return View(model);
+        }
+        public IdentityResult CrearAdminUser(ApplicationUser usuario, string password)
+        {
+            ApplicationDbContext contexto = new ApplicationDbContext();
+
+            var AdministradorDeRoles = new RoleManager<IdentityRole>(new RoleStore<IdentityRole>(contexto));
+            var AdministradorDeUsuarios = new UserManager<ApplicationUser>(new UserStore<ApplicationUser>(contexto));
+
+            var exito = AdministradorDeUsuarios.Create(usuario, password);
+            if (exito.Succeeded)
+            {
+                AdministradorDeUsuarios.AddToRole(usuario.Id, "Admin");
+            }
+            return exito;
         }
 
         //
@@ -392,7 +433,7 @@ namespace ProyectoCibertec.Controllers
         public ActionResult LogOff()
         {
             AuthenticationManager.SignOut(DefaultAuthenticationTypes.ApplicationCookie);
-            return RedirectToAction("Index", "Home");
+            return RedirectToAction("Index", "Producto");
         }
 
         //
@@ -449,7 +490,7 @@ namespace ProyectoCibertec.Controllers
             {
                 return Redirect(returnUrl);
             }
-            return RedirectToAction("Index", "Home");
+            return RedirectToAction("Index", "Producto");
         }
 
         internal class ChallengeResult : HttpUnauthorizedResult

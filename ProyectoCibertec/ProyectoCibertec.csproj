@@ -169,14 +169,33 @@
     <Compile Include="App_Start\IdentityConfig.cs" />
     <Compile Include="App_Start\RouteConfig.cs" />
     <Compile Include="App_Start\Startup.Auth.cs" />
+    <Compile Include="Areas\Order\Controllers\OrdersController.cs" />
+    <Compile Include="Areas\Order\OrdenAreaRegistration.cs" />
+    <Compile Include="Areas\Order\ViewModels\RegistroOrderViewModel.cs" />
     <Compile Include="Controllers\AccountController.cs" />
+    <Compile Include="Controllers\AdminController.cs" />
     <Compile Include="Controllers\HomeController.cs" />
     <Compile Include="Controllers\ManageController.cs" />
+    <Compile Include="Controllers\MovimientosController.cs" />
+    <Compile Include="Controllers\OrdenesController.cs" />
     <Compile Include="Controllers\ProductoController.cs" />
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\202011020433072_InicialDB.cs" />
+    <Compile Include="Migrations\202011020433072_InicialDB.Designer.cs">
+      <DependentUpon>202011020433072_InicialDB.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\202011030316155_021120201.cs" />
+    <Compile Include="Migrations\202011030316155_021120201.Designer.cs">
+      <DependentUpon>202011030316155_021120201.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Models\AccountViewModels.cs" />
+    <Compile Include="Models\AspNetUsers.cs">
+      <DependentUpon>ModelCibertec.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\Dto\RegistroOrderDto.cs" />
     <Compile Include="Models\IdentityModels.cs" />
     <Compile Include="Models\ManageViewModels.cs" />
     <Compile Include="Models\ModelCibertec.Context.cs">
@@ -217,6 +236,13 @@
     <Content Include="Content\bootstrap-theme.min.css" />
     <Content Include="Content\bootstrap.css" />
     <Content Include="Content\bootstrap.min.css" />
+    <Content Include="Content\images\ui-icons_444444_256x240.png" />
+    <Content Include="Content\images\ui-icons_555555_256x240.png" />
+    <Content Include="Content\images\ui-icons_777620_256x240.png" />
+    <Content Include="Content\images\ui-icons_777777_256x240.png" />
+    <Content Include="Content\images\ui-icons_cc0000_256x240.png" />
+    <Content Include="Content\images\ui-icons_ffffff_256x240.png" />
+    <Content Include="Content\jquery-ui.min.css" />
     <Content Include="favicon.ico" />
     <Content Include="fonts\glyphicons-halflings-regular.svg" />
     <Content Include="Global.asax" />
@@ -240,12 +266,16 @@
     <Content Include="Models\ModelCibertec.edmx.diagram">
       <DependentUpon>ModelCibertec.edmx</DependentUpon>
     </Content>
+    <Content Include="Areas\Order\Views\web.config" />
     <None Include="Scripts\jquery-3.4.1.intellisense.js" />
     <Content Include="Scripts\jquery-3.4.1.js" />
     <Content Include="Scripts\jquery-3.4.1.min.js" />
     <Content Include="Scripts\jquery-3.4.1.slim.js" />
     <Content Include="Scripts\jquery-3.4.1.slim.min.js" />
     <None Include="Scripts\jquery.validate-vsdoc.js" />
+    <Content Include="Scripts\jquery-ui.min.js" />
+    <Content Include="Scripts\jquery.unobtrusive-ajax.js" />
+    <Content Include="Scripts\jquery.unobtrusive-ajax.min.js" />
     <Content Include="Scripts\jquery.validate.js" />
     <Content Include="Scripts\jquery.validate.min.js" />
     <Content Include="Scripts\jquery.validate.unobtrusive.js" />
@@ -290,9 +320,26 @@
     <Content Include="Views\Producto\Details.cshtml" />
     <Content Include="Views\Producto\Edit.cshtml" />
     <Content Include="Views\Producto\Index.cshtml" />
+    <Content Include="Views\Admin\AsignarRol.cshtml" />
+    <Content Include="Views\Admin\CrearRol.cshtml" />
+    <Content Include="Views\Admin\CrearUsuario.cshtml" />
+    <Content Include="Views\Admin\Index.cshtml" />
+    <Content Include="Views\Movimientos\Create.cshtml" />
+    <Content Include="Views\Movimientos\Delete.cshtml" />
+    <Content Include="Views\Movimientos\Details.cshtml" />
+    <Content Include="Views\Movimientos\Edit.cshtml" />
+    <Content Include="Views\Movimientos\Index.cshtml" />
+    <Content Include="Views\Ordenes\Create.cshtml" />
+    <Content Include="Views\Ordenes\Delete.cshtml" />
+    <Content Include="Views\Ordenes\Details.cshtml" />
+    <Content Include="Views\Ordenes\Edit.cshtml" />
+    <Content Include="Views\Ordenes\Index.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
+    <Folder Include="Areas\Order\Data\" />
+    <Folder Include="Areas\Order\Views\Orders\" />
+    <Folder Include="Areas\Order\Views\Shared\" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="fonts\glyphicons-halflings-regular.woff2" />
@@ -309,6 +356,14 @@
   </ItemGroup>
   <ItemGroup>
     <Service Include="{508349B6-6B84-4DF5-91F0-309BEEBAD82D}" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Migrations\202011020433072_InicialDB.resx">
+      <DependentUpon>202011020433072_InicialDB.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\202011030316155_021120201.resx">
+      <DependentUpon>202011030316155_021120201.cs</DependentUpon>
+    </EmbeddedResource>
   </ItemGroup>
   <PropertyGroup>
     <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>

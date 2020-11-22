@@ -1,0 +1,66 @@
+﻿@model ProyectoCibertec.Models.Movimiento
+
+@{
+    ViewBag.Title = "Creación";
+}
+
+<h2>Ingresar nuevo</h2>
+
+
+@using (Html.BeginForm())
+{
+    @Html.AntiForgeryToken()
+
+    <div class="form-horizontal">
+        <h4>Movimiento</h4>
+        <hr />
+        @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+        <div class="form-group">
+            @Html.LabelFor(model => model.Producto_idProducto, "Producto_idProducto", htmlAttributes: new { @class = "control-label col-md-2" })
+            <div class="col-md-10">
+                @Html.DropDownList("Producto_idProducto", null, htmlAttributes: new { @class = "form-control" })
+                @Html.ValidationMessageFor(model => model.Producto_idProducto, "", new { @class = "text-danger" })
+            </div>
+        </div>
+
+        <div class="form-group">
+            @Html.LabelFor(model => model.dblCantidad, htmlAttributes: new { @class = "control-label col-md-2" })
+            <div class="col-md-10">
+                @Html.EditorFor(model => model.dblCantidad, new { htmlAttributes = new { @class = "form-control", @type = "number", Value = 0 } })
+                @Html.ValidationMessageFor(model => model.dblCantidad, "", new { @class = "text-danger" })
+            </div>
+        </div>
+
+        <div class="form-group">
+            @Html.LabelFor(model => model.dtFecha, htmlAttributes: new { @class = "control-label col-md-2" })
+            <div class="col-md-10">
+                @Html.EditorFor(model => model.dtFecha, new { htmlAttributes = new { @class = "form-control datepicker", @type = "date", Value = @ViewData["fechaActual"] } })
+                @Html.ValidationMessageFor(model => model.dtFecha, "", new { @class = "text-danger" })
+            </div>
+        </div>
+
+        <div class="form-group">
+            <div class="col-md-offset-2 col-md-10">
+                <input type="submit" value="Ingresar" class="btn btn-default" />
+            </div>
+        </div>
+    </div>
+}
+
+<div>
+    @Html.ActionLink("Reagrasar a Listado", "Index")
+</div>
+
+@section Scripts {
+    @Scripts.Render("~/bundles/jqueryval")
+    @*<script type="text/javascript">
+            $('#dtFecha').datepicker({
+                format: "dd/mm/yyyy",
+                language: "es",
+                todayHighlight: true,
+                autoclose: true
+            }).datepicker("setDate", new Date());
+        </script>*@
+}
+
+

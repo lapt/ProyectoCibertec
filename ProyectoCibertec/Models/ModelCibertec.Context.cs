@@ -30,5 +30,6 @@ namespace ProyectoCibertec.Models
         public virtual DbSet<OrdenDetalle> OrdenDetalle { get; set; }
         public virtual DbSet<Producto> Producto { get; set; }
         public virtual DbSet<Stock> Stock { get; set; }
+        public virtual DbSet<AspNetUsers> AspNetUsers { get; set; }
     }
 }

@@ -11,14 +11,20 @@ namespace ProyectoCibertec.Models
 {
     using System;
     using System.Collections.Generic;
-    
+    using System.ComponentModel;
+    using System.ComponentModel.DataAnnotations;
+
     public partial class Movimiento
     {
         public int idMovimiento { get; set; }
         public Nullable<int> Producto_idProducto { get; set; }
+        [DisplayName("Cantidad")]
         public Nullable<decimal> dblCantidad { get; set; }
+        [DisplayName("Fecha")]
+        [DataType(DataType.Date)]
+        [DisplayFormat(DataFormatString = "{0:yyyy-MM-dd}", ApplyFormatInEditMode = true)]
         public Nullable<System.DateTime> dtFecha { get; set; }
-    
+        [DisplayName("Producto")]
         public virtual Producto Producto { get; set; }
     }
 }

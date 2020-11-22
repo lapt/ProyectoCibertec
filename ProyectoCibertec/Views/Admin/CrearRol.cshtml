@@ -1,0 +1,15 @@
+﻿
+@{
+    ViewBag.Title = "CrearRol";
+}
+
+<h2>Crear Rol</h2>
+
+@using (Html.BeginForm("NuevoRol","Admin",FormMethod.Post))
+{
+    <section>
+        <label>Nuevo Rol:</label><input name="txtRol" /><br />
+
+        <input type="submit" value="Crear Rol" />
+    </section>
+}

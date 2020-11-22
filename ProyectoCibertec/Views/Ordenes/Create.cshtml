@@ -1,0 +1,242 @@
+﻿@model ProyectoCibertec.Models.Orden
+
+@{
+    ViewBag.Title = "Create";
+}
+
+<h2>Crear</h2>
+
+
+
+@using (Ajax.BeginForm("IngresarOrden", "Ordenes", new AjaxOptions { HttpMethod = "POST", OnSuccess = "onAjaxRequestSuccess" }, new { @id = "AjaxformId", @class = "form-horizontal", role = "form" }))
+{
+
+    <div class="form-horizontal">
+        <h4>Orden de Compra</h4>
+        <hr />
+        @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+        <div class="form-group">
+            @Html.LabelFor(model => model.strNroDoc, htmlAttributes: new { @class = "control-label col-md-2" })
+            <div class="col-md-10">
+                @Html.EditorFor(model => model.strNroDoc, new { htmlAttributes = new { @class = "form-control" } })
+                @Html.ValidationMessageFor(model => model.strNroDoc, "", new { @class = "text-danger" })
+            </div>
+        </div>
+
+        <div class="form-group">
+            @Html.LabelFor(model => model.dtFecha, htmlAttributes: new { @class = "control-label col-md-2" })
+            <div class="col-md-10">
+                @Html.EditorFor(model => model.dtFecha, new { htmlAttributes = new { @class = "form-control datepicker", @type = "date", Value = @ViewData["fechaActual"] } })
+                @Html.ValidationMessageFor(model => model.dtFecha, "", new { @class = "text-danger" })
+            </div>
+        </div>
+        <hr />
+        <div class="form-group">
+            <label class="control-label col-md-2">Productos</label>
+            <div class="col-md-10">
+                @Html.DropDownList("Producto_idProducto", null, htmlAttributes: new { @class = "form-control" })
+            </div>
+
+        </div>
+
+
+        <div class="form-group">
+            <label class="control-label col-md-2">Cantidad</label>
+            <div class="col-md-10">
+                <input id="txtCantidad" type="number" class="form-control col-md-4" />
+            </div>
+        </div>
+
+
+
+        <div class="form-group">
+            <div class="col-md-offset-2 col-md-10">
+                <button class="btn btn-primary" id="registrarM" type="button">Agregar</button>
+            </div>
+        </div>
+
+
+        <hr />
+        <section>
+            <table id="lstOrdenes" class="table table-bordered">
+                <thead>
+                    <tr>
+
+                        <th style="width: 30%">Nro. Orden</th>
+                        <th style="width: 25%">Fecha</th>
+                        <th style="width: 35%">Producto</th>
+                        <th style="width: 25%">Cantidad</th>
+                        <th style="width: 10%">Eliminar</th>
+                    </tr>
+                </thead>
+                <tbody>
+                </tbody>
+            </table>
+        </section>
+
+        <div class="form-group">
+            <div class="col-md-offset-2 col-md-10">
+                <button id="RegistrarOrden" class="btn btn-info" type="submit">Registrar Orden</button>
+            </div>
+        </div>
+        @Html.AntiForgeryToken()
+        <div id="miModal" class="modal fade" tabindex="-1">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title">Error</h5>
+                        <button class="close" data-dismiss="modal">&times;</button>
+                    </div>
+                    <div class="modal-body">
+                        <span id="errorMessage"></span>
+                    </div>
+                    <div class="modal-footer">
+                        <button class="btn btn-primary" data-dismiss="modal">Salir</button>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </div>
+
+    <div>
+        @Html.ActionLink("Regresar a lista", "Index")
+    </div>
+}
+    @section Scripts {
+        @Scripts.Render("~/bundles/jqueryval")
+        <script>
+
+        $("#registrarM").click(function () {
+
+            let strNroDoc = $("#strNroDoc").val();
+            let dtFecha = $("#dtFecha").val();
+            let producto_idProducto = $("#Producto_idProducto").val();
+            let txtCantidad = $("#txtCantidad").val();
+
+
+            if (txtCantidad == "") {
+                $("#errorMessage").text("Todos los datos son obligatorios");
+                $("#miModal").modal('show')
+            }
+            else {
+
+                let nuevaFila = "<tr><td>" + strNroDoc + "</td><td>" + dtFecha + "</td><td>" + producto_idProducto + "</td><td>" + txtCantidad +
+                    "</td><td><input type='button' value='Eliminar' onclick='borrarFila(this)'/></td></tr>";
+
+                $("#lstOrdenes tbody").append(nuevaFila);
+                LimpiarParametros();
+            }
+        });
+
+        function LimpiarParametros() {
+            //$("#strNroDoc").val("");
+
+        }
+
+        function borrarFila(btn) {
+            //este es el tr que incluye toda la fila
+            var Fila = btn.parentNode.parentNode;
+            //este es el body de la tabla listar Matriculas
+            var tbody = Fila.parentNode;
+            tbody.removeChild(Fila);
+            }
+
+
+            function processForm(event) {
+                var dataString;
+                event.preventDefault();
+                event.stopImmediatePropagation();
+                var action = $("#AjaxformId").attr("action");
+                dataString = new FormData($("#AjaxformId").get(0));                
+
+                //recorrer todos los tr del tbody y almacenarlos en un arreglo OrdenDetalle
+                $.each($("#lstOrdenes tbody tr"), function () {
+                    dataString.append("OrdenDetalle[]", {
+
+                        Producto_idProducto: $(this).find('td:eq(2)').html(),
+                        dblCantidad: $(this).find('td:eq(3)').html(),
+
+                    });
+                   
+                });
+
+                // Setting.  
+               
+                
+                contentType = false;
+                processData = false;
+                $.ajax({
+                    type: "POST",
+                    url: action,
+                    data: dataString,
+                    dataType: "json",
+                    contentType: contentType,
+                    processData: processData,
+                    success: function (result) {
+                        // Result.  
+                        onAjaxRequestSuccess(result);
+                    },
+                    error: function (jqXHR, textStatus, errorThrown) {
+                        //do your own thing  
+                        alert("fail");
+                    }
+                });
+            };
+
+            $(document).ready(function () {
+                $("#RegistrarOrden").submit(processForm(event)); //end .submit()  
+            });
+            var onAjaxRequestSuccess = function (result) {
+                if (result.EnableError) {
+                    // Setting.  
+                    alert(result.ErrorMsg);
+                } else if (result.EnableSuccess) {
+                    // Setting.  
+                    alert(result.SuccessMsg);
+                    // Resetting form.  
+                    $('#AjaxformId').get(0).reset();
+                }
+            }  
+
+    @*$("#RegistrarOrden").click(function () {
+
+            let ordenDetalleArr = [];
+
+            //recorrer todos los tr del tbody y almacenarlos en un arreglo
+        $.each($("#lstOrdenes tbody tr"), function () {
+            ordenDetalleArr.push({
+
+                Producto_idProducto: $(this).find('td:eq(2)').html(),
+                dblCantidad: $(this).find('td:eq(3)').html(),
+
+                });
+            });
+
+        let strNroDoc = $("#strNroDoc").val();
+        let fechaR = $("#dtFecha").val();
+
+
+            let jsonListaOrdenes = {
+                StrNroDoc: strNroDoc,
+                DtFecha:fechaR,
+                LstOrder: ordenDetalleArr,
+            };
+
+            let token =  $("[name='__RequestVerificationToken']").val();
+            alert(token);
+            $.ajax({
+                ///Matricula/Enrollment/IngresarMatriculasPost
+                url: "@Url.Action("IngresarOrden", "Ordenes")",
+                type: "POST",
+                headers: { 'RequestVerificationToken': token },
+                data: jsonListaOrdenes,
+                success: function (resultado) {
+                    alert(resultado);
+                }
+            });
+
+        });*@
+
+        </script>
+    }

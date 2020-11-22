@@ -11,12 +11,14 @@ namespace ProyectoCibertec.Models
 {
     using System;
     using System.Collections.Generic;
-    
+    using System.ComponentModel;
+
     public partial class OrdenDetalle
     {
         public int idOrdenDetalle { get; set; }
         public Nullable<int> Orden_idOrden { get; set; }
         public Nullable<int> Producto_idProducto { get; set; }
+        [DisplayName("Cantidad")]
         public Nullable<decimal> dblCantidad { get; set; }
     
         public virtual Orden Orden { get; set; }
