@@ -1,7 +1,7 @@
 ﻿@model IEnumerable<ProyectoCibertec.Models.Movimiento>
 
 @{
-    ViewBag.Title = "Index";
+    ViewBag.Title = "Movimientos";
 }
 
 <h2>Lista de Movimientos</h2>
@@ -12,38 +12,45 @@
 <table class="table">
     <tr>
         <th>
+            @Html.DisplayNameFor(model => model.idMovimiento)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.Producto.strDescripcion)
+        </th>
+        <th>
             @Html.DisplayNameFor(model => model.dblCantidad)
         </th>
         <th>
             @Html.DisplayNameFor(model => model.dtFecha)
         </th>
-        <th>
-            @Html.DisplayNameFor(model => model.Producto.strDescripcion)
-        </th>
+       
         <th></th>
     </tr>
 
 @foreach (var item in Model) {
-    <tr>
-        <td>
-            @Html.DisplayFor(modelItem => item.dblCantidad)
-        </td>
-        <td>
-            @{
-                var date = item.dtFecha.Value.ToString("dd-MM-yyyy");
-            }
-            @Html.DisplayFor(modelItem => date)
-        </td>
-        <td>
-           
-            @Html.DisplayFor(modelItem => item.Producto.strDescripcion)
-        </td>
-        <td>
-            @Html.ActionLink("Editar", "Edit", new { id=item.idMovimiento }) |
-            @Html.ActionLink("Detalle", "Details", new { id=item.idMovimiento }) |
-            @Html.ActionLink("Eliminar", "Delete", new { id=item.idMovimiento })
-        </td>
-    </tr>
+<tr>
+    <td>
+        @item.idMovimiento
+    </td>
+    <td>
+        @item.Producto.strDescripcion
+    </td>
+    <td>
+        @Html.DisplayFor(modelItem => item.dblCantidad)
+    </td>
+    <td>
+        @{
+            var date = item.dtFecha.Value.ToString("dd-MM-yyyy");
+        }
+        @Html.DisplayFor(modelItem => date)
+    </td>
+   
+    <td>
+        @Html.ActionLink("Editar", "Edit", new { id = item.idMovimiento }) |
+        @Html.ActionLink("Detalle", "Details", new { id = item.idMovimiento }) |
+        @Html.ActionLink("Eliminar", "Delete", new { id = item.idMovimiento })
+    </td>
+</tr>
 }
 
 </table>

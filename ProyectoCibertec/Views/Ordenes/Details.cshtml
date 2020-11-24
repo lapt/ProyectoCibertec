@@ -1,10 +1,10 @@
 ﻿@model ProyectoCibertec.Models.Orden
 
 @{
-    ViewBag.Title = "Details";
+    ViewBag.Title = "Detalle de orden de compra";
 }
 
-<h2>Details</h2>
+<h2>Datos generales de la orden de compra</h2>
 
 <div>
     <h4>Orden</h4>
@@ -28,7 +28,46 @@
 
     </dl>
 </div>
+<hr />
+
+
+<div>
+    <h4>Detalle de la orden de Compra</h4>
+
+    <hr />
+    <section>
+        <table id="lstOrdenes" class="table table-bordered">
+            <thead>
+                <tr>
+                    <th class="text-center" style="width: 10%">Item</th>
+                    <th class="text-center" style="width: 45%">Nombre del Producto</th>
+                    <th class="text-center" style="width: 45%">Cantidad</th>
+                </tr>
+            </thead>
+            <tbody>
+                @{var items = 0;}
+                @foreach (var item in Model.OrdenDetalle)
+                {
+                    items++;
+                    <tr>
+                        <td class="text-center">
+                            @items
+                        </td>
+                        <td class="text-center">
+                            @item.Producto.strDescripcion
+                        </td>
+                        <td class="text-center">
+                            @item.dblCantidad
+                        </td>
+
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </section>
+</div>
+
 <p>
-    @Html.ActionLink("Edit", "Edit", new { id = Model.idOrden }) |
-    @Html.ActionLink("Back to List", "Index")
+    @Html.ActionLink("Editar", "Edit", new { id = Model.idOrden }) |
+    @Html.ActionLink("Regresar a listado", "Index")
 </p>

@@ -1,49 +1,66 @@
-﻿@model ProyectoCibertec.Models.Orden
-
+﻿@model ProyectoCibertec.Models.Dto.RegistroOrderDto
+@using ProyectoCibertec.Models
 @{
-    ViewBag.Title = "Create";
+    ViewBag.Title = "Crear";
 }
 
 <h2>Crear</h2>
 
 
-
-@using (Ajax.BeginForm("IngresarOrden", "Ordenes", new AjaxOptions { HttpMethod = "POST", OnSuccess = "onAjaxRequestSuccess" }, new { @id = "AjaxformId", @class = "form-horizontal", role = "form" }))
+@using (Html.BeginForm())
 {
-
+    @Html.AntiForgeryToken()
     <div class="form-horizontal">
+
         <h4>Orden de Compra</h4>
         <hr />
         @Html.ValidationSummary(true, "", new { @class = "text-danger" })
         <div class="form-group">
-            @Html.LabelFor(model => model.strNroDoc, htmlAttributes: new { @class = "control-label col-md-2" })
+            @Html.LabelFor(model => model.StrNroDoc, htmlAttributes: new { @class = "control-label col-md-2" })
             <div class="col-md-10">
-                @Html.EditorFor(model => model.strNroDoc, new { htmlAttributes = new { @class = "form-control" } })
-                @Html.ValidationMessageFor(model => model.strNroDoc, "", new { @class = "text-danger" })
+                @if (Convert.ToBoolean(ViewBag.Show))
+                {
+                    @Html.EditorFor(model => model.StrNroDoc, new { htmlAttributes = new { @class = "form-control" } })
+                }
+                else
+                {
+                    @Html.EditorFor(model => model.StrNroDoc, new { htmlAttributes = new { @class = "form-control", @readonly = "readonly" } })
+                }
+
+                @Html.ValidationMessageFor(model => model.StrNroDoc, "", new { @class = "text-danger" })
             </div>
         </div>
 
         <div class="form-group">
-            @Html.LabelFor(model => model.dtFecha, htmlAttributes: new { @class = "control-label col-md-2" })
+            @Html.LabelFor(model => model.DtFecha, htmlAttributes: new { @class = "control-label col-md-2" })
             <div class="col-md-10">
-                @Html.EditorFor(model => model.dtFecha, new { htmlAttributes = new { @class = "form-control datepicker", @type = "date", Value = @ViewData["fechaActual"] } })
-                @Html.ValidationMessageFor(model => model.dtFecha, "", new { @class = "text-danger" })
+
+                @if (Convert.ToBoolean(ViewBag.Show))
+                {
+                    @Html.EditorFor(model => model.DtFecha, new { htmlAttributes = new { @class = "form-control datepicker", @type = "date", Value = @ViewData["fechaActual"] } })
+                }
+                else
+                {
+                    @Html.EditorFor(model => model.DtFecha, new { htmlAttributes = new { @class = "form-control datepicker", @type = "date", Value = @ViewData["fechaActual"], @readonly = "readonly" } })
+                }
+                @Html.ValidationMessageFor(model => model.DtFecha, "", new { @class = "text-danger" })
             </div>
         </div>
         <hr />
         <div class="form-group">
             <label class="control-label col-md-2">Productos</label>
             <div class="col-md-10">
-                @Html.DropDownList("Producto_idProducto", null, htmlAttributes: new { @class = "form-control" })
+                @Html.DropDownListFor(model => model.IdProducto, new SelectList(ViewBag.Producto_idProducto, "idProducto", "strDescripcion"), htmlAttributes: new { @class = "form-control" })
             </div>
 
         </div>
 
 
         <div class="form-group">
-            <label class="control-label col-md-2">Cantidad</label>
+            @Html.LabelFor(model => model.DblCantidad, htmlAttributes: new { @class = "control-label col-md-2" })
             <div class="col-md-10">
-                <input id="txtCantidad" type="number" class="form-control col-md-4" />
+                @Html.EditorFor(model => model.DblCantidad, new { htmlAttributes = new { @class = "form-control" } })
+                @Html.ValidationMessageFor(model => model.DblCantidad, "", new { @class = "text-danger" })
             </div>
         </div>
 
@@ -51,7 +68,7 @@
 
         <div class="form-group">
             <div class="col-md-offset-2 col-md-10">
-                <button class="btn btn-primary" id="registrarM" type="button">Agregar</button>
+                <button class="btn btn-primary" id="registrarM" type="submit" value="add" name="btnAdd">Agregar</button>
             </div>
         </div>
 
@@ -61,25 +78,48 @@
             <table id="lstOrdenes" class="table table-bordered">
                 <thead>
                     <tr>
-
+                        <th style="width: 30%">Item</th>
                         <th style="width: 30%">Nro. Orden</th>
                         <th style="width: 25%">Fecha</th>
                         <th style="width: 35%">Producto</th>
                         <th style="width: 25%">Cantidad</th>
-                        <th style="width: 10%">Eliminar</th>
+                        @*<th style="width: 10%">Eliminar</th>*@
                     </tr>
                 </thead>
                 <tbody>
+                    @{var items = 0;}
+                    @foreach (var item in Model.LstOrder)
+                    {
+                        items++;
+                        <tr>
+                            <td class="text-center">
+                                @items
+                            </td>
+                            <td class="text-center">
+                                @item.StrNroDoc
+                            </td>
+                            <td>
+                                @item.DtFecha.ToString("dd-MM-yyyy")
+                            </td>
+                            <td class="text-center">
+                                @item.Producto_idProducto
+                            </td>
+                            <td class="text-center">
+                                @item.dblCantidad
+                            </td>
+
+                        </tr>
+                    }
                 </tbody>
             </table>
         </section>
 
         <div class="form-group">
             <div class="col-md-offset-2 col-md-10">
-                <button id="RegistrarOrden" class="btn btn-info" type="submit">Registrar Orden</button>
+                <button id="RegistrarOrden" class="btn btn-info" type="submit" value="set" name="btnSet">Registrar Orden</button>
             </div>
         </div>
-        @Html.AntiForgeryToken()
+
         <div id="miModal" class="modal fade" tabindex="-1">
             <div class="modal-dialog">
                 <div class="modal-content">
@@ -98,145 +138,19 @@
             </div>
         </div>
     </div>
-
-    <div>
-        @Html.ActionLink("Regresar a lista", "Index")
-    </div>
 }
-    @section Scripts {
-        @Scripts.Render("~/bundles/jqueryval")
-        <script>
 
+
+
+<div>
+    @Html.ActionLink("Regresar a lista", "Index")
+</div>
+@*@section Scripts {
+    <script>
         $("#registrarM").click(function () {
 
-            let strNroDoc = $("#strNroDoc").val();
-            let dtFecha = $("#dtFecha").val();
-            let producto_idProducto = $("#Producto_idProducto").val();
-            let txtCantidad = $("#txtCantidad").val();
-
-
-            if (txtCantidad == "") {
-                $("#errorMessage").text("Todos los datos son obligatorios");
-                $("#miModal").modal('show')
-            }
-            else {
-
-                let nuevaFila = "<tr><td>" + strNroDoc + "</td><td>" + dtFecha + "</td><td>" + producto_idProducto + "</td><td>" + txtCantidad +
-                    "</td><td><input type='button' value='Eliminar' onclick='borrarFila(this)'/></td></tr>";
-
-                $("#lstOrdenes tbody").append(nuevaFila);
-                LimpiarParametros();
-            }
+            $("#StrNroDoc").attr("disabled", true);
         });
+    </script>
 
-        function LimpiarParametros() {
-            //$("#strNroDoc").val("");
-
-        }
-
-        function borrarFila(btn) {
-            //este es el tr que incluye toda la fila
-            var Fila = btn.parentNode.parentNode;
-            //este es el body de la tabla listar Matriculas
-            var tbody = Fila.parentNode;
-            tbody.removeChild(Fila);
-            }
-
-
-            function processForm(event) {
-                var dataString;
-                event.preventDefault();
-                event.stopImmediatePropagation();
-                var action = $("#AjaxformId").attr("action");
-                dataString = new FormData($("#AjaxformId").get(0));                
-
-                //recorrer todos los tr del tbody y almacenarlos en un arreglo OrdenDetalle
-                $.each($("#lstOrdenes tbody tr"), function () {
-                    dataString.append("OrdenDetalle[]", {
-
-                        Producto_idProducto: $(this).find('td:eq(2)').html(),
-                        dblCantidad: $(this).find('td:eq(3)').html(),
-
-                    });
-                   
-                });
-
-                // Setting.  
-               
-                
-                contentType = false;
-                processData = false;
-                $.ajax({
-                    type: "POST",
-                    url: action,
-                    data: dataString,
-                    dataType: "json",
-                    contentType: contentType,
-                    processData: processData,
-                    success: function (result) {
-                        // Result.  
-                        onAjaxRequestSuccess(result);
-                    },
-                    error: function (jqXHR, textStatus, errorThrown) {
-                        //do your own thing  
-                        alert("fail");
-                    }
-                });
-            };
-
-            $(document).ready(function () {
-                $("#RegistrarOrden").submit(processForm(event)); //end .submit()  
-            });
-            var onAjaxRequestSuccess = function (result) {
-                if (result.EnableError) {
-                    // Setting.  
-                    alert(result.ErrorMsg);
-                } else if (result.EnableSuccess) {
-                    // Setting.  
-                    alert(result.SuccessMsg);
-                    // Resetting form.  
-                    $('#AjaxformId').get(0).reset();
-                }
-            }  
-
-    @*$("#RegistrarOrden").click(function () {
-
-            let ordenDetalleArr = [];
-
-            //recorrer todos los tr del tbody y almacenarlos en un arreglo
-        $.each($("#lstOrdenes tbody tr"), function () {
-            ordenDetalleArr.push({
-
-                Producto_idProducto: $(this).find('td:eq(2)').html(),
-                dblCantidad: $(this).find('td:eq(3)').html(),
-
-                });
-            });
-
-        let strNroDoc = $("#strNroDoc").val();
-        let fechaR = $("#dtFecha").val();
-
-
-            let jsonListaOrdenes = {
-                StrNroDoc: strNroDoc,
-                DtFecha:fechaR,
-                LstOrder: ordenDetalleArr,
-            };
-
-            let token =  $("[name='__RequestVerificationToken']").val();
-            alert(token);
-            $.ajax({
-                ///Matricula/Enrollment/IngresarMatriculasPost
-                url: "@Url.Action("IngresarOrden", "Ordenes")",
-                type: "POST",
-                headers: { 'RequestVerificationToken': token },
-                data: jsonListaOrdenes,
-                success: function (resultado) {
-                    alert(resultado);
-                }
-            });
-
-        });*@
-
-        </script>
-    }
+}*@

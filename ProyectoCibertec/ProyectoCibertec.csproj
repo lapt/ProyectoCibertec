@@ -195,6 +195,7 @@
     <Compile Include="Models\AspNetUsers.cs">
       <DependentUpon>ModelCibertec.tt</DependentUpon>
     </Compile>
+    <Compile Include="Models\Dto\Detalle.cs" />
     <Compile Include="Models\Dto\RegistroOrderDto.cs" />
     <Compile Include="Models\IdentityModels.cs" />
     <Compile Include="Models\ManageViewModels.cs" />

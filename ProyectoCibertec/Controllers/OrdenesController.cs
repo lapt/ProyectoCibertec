@@ -35,82 +35,109 @@ namespace ProyectoCibertec.Controllers
             {
                 return HttpNotFound();
             }
+
+            
             return View(orden);
         }
 
         // GET: Ordenes/Create
         public ActionResult Create()
         {
-            ViewBag.Producto_idProducto = new SelectList(db.Producto, "idProducto", "strDescripcion");
+            ViewBag.Producto_idProducto = db.Producto;
             ViewData["fechaActual"] = DateTime.Now.ToString("yyyy-MM-dd");
-            return View();
+            RegistroOrderDto registroOrderDto = new RegistroOrderDto();
+            TempData.Clear();
+            ViewBag.Show = true;
+            return View(registroOrderDto);
         }
 
-        // POST: Ordenes/Create
-        // Para protegerse de ataques de publicación excesiva, habilite las propiedades específicas a las que desea enlazarse. Para obtener 
-        // más información vea https://go.microsoft.com/fwlink/?LinkId=317598.
+    
         [HttpPost]
-        [ValidateAntiForgeryToken]
-        public async Task<ActionResult> Create([Bind(Include = "idOrden,strNroDoc,dtFecha")] Orden orden)
+        //[AllowAnonymous]
+        //[ValidateAntiForgeryToken]
+        public ActionResult Create(RegistroOrderDto vm)
         {
-            if (ModelState.IsValid)
+           
+            // Inicializamos contador y lista
+            List<Detalle> lstMatricula1;
+            if (!TempData.ContainsKey("count"))
             {
-                db.Orden.Add(orden);
-                await db.SaveChangesAsync();
-                return RedirectToAction("Index");
+                
+                TempData["count"] = 0;
+                TempData["listDetalle"] = new List<Detalle>();
+                lstMatricula1 = new List<Detalle>();
             }
-
-            return View(orden);
-        }
-        [HttpPost]
-        [AllowAnonymous]
-        [ValidateAntiForgeryToken]
-        public ActionResult IngresarOrden(Orden vm)
-        {
-
-            try
+            else
             {
-                // Verification  
-                if (ModelState.IsValid)
+               
+                TempData["count"] = Convert.ToInt32(TempData["count"] as string) + 1;
+                TempData.Keep("count");
+                lstMatricula1 = TempData["listDetalle"] as List<Detalle>;
+                TempData.Keep("listDetalle");
+            }
+            //FIN
+            // Identificar que submit se activo
+            if (Request.Form["btnAdd"] != null)
+            {
+                ViewBag.Show = false;
+                ViewBag.Producto_idProducto = db.Producto;
+                ViewData["fechaActual"] = vm.DtFecha.ToString("yyyy-MM-dd");
+                ViewBag.listDetalle = new List<Detalle>();
+                try
                 {
-                    // Info.  
-                    var orden = new Orden()
+                    vm.LstOrder.Add(new Detalle()
                     {
-                        strNroDoc = vm.strNroDoc,
-                        dtFecha = vm.dtFecha
-                    };
+                        dblCantidad = vm.DblCantidad,
+                        DtFecha = vm.DtFecha,
+                        Producto_idProducto = vm.IdProducto,
+                        StrNroDoc = vm.StrNroDoc
+                    });
 
-                    var producto = db.Producto.Find(vm.OrdenDetalle.First().Producto_idProducto);
+                    lstMatricula1.Add(vm.LstOrder[0]);
+                    vm.LstOrder = lstMatricula1;
+                    TempData["listDetalle"] = lstMatricula1;
 
-                    foreach (var orderDetalle in vm.OrdenDetalle)
-                    {
-                        orderDetalle.Producto = producto;
-                        orden.OrdenDetalle.Add(orderDetalle);
-                    }
-                    db.Orden.Add(orden);
-                    db.SaveChanges();
+                    return View(vm);
+                }
+                catch (Exception ex)
+                {
+                    // Info  
+                    Console.Write(ex);
+                }
+                // Info  
+                return View(vm);
+            }
+            else if (Request.Form["btnSet"] != null)
+            {
+                ViewBag.Show = true;
+                var orden = new Orden()
+                {
+                    strNroDoc = vm.StrNroDoc,
+                    dtFecha = vm.DtFecha
+                };
 
-                    return this.Json(new
-                    {
-                        EnableSuccess = true,
-                        SuccessTitle = "Success",
-                        SuccessMsg = "Exitos MSJ"
+                //var producto = db.Producto.Find(vm.IdProducto);           
+
+
+                foreach (var orderDetalle in lstMatricula1)
+                {
+
+                    orden.OrdenDetalle.Add(new OrdenDetalle() { 
+                    dblCantidad= orderDetalle.dblCantidad,                    
+                    Producto_idProducto=vm.IdProducto                    
                     });
                 }
+                vm.StrNroDoc = "";
+                vm.DblCantidad = 0;
+                db.Orden.Add(orden);
+                db.SaveChanges();
+                ViewBag.Producto_idProducto = db.Producto;
+                ViewData["fechaActual"] = DateTime.Now.ToString("yyyy-MM-dd");
+
             }
-            catch (Exception ex)
-            {
-                // Info  
-                Console.Write(ex);
-            }
-            // Info  
-            return this.Json(new
-            {
-                EnableError = true,
-                ErrorTitle = "Error",
-                ErrorMsg = "Something goes wrong, please try again later"
-            });
-          
+            ModelState.Clear();
+            TempData.Clear();
+            return View(vm);
         }
         // GET: Ordenes/Edit/5
         public async Task<ActionResult> Edit(int? id)

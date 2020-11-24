@@ -1,7 +1,7 @@
 ﻿@model IEnumerable<ProyectoCibertec.Models.Orden>
 
 @{
-    ViewBag.Title = "Index";
+    ViewBag.Title = "Ordenes";
 }
 
 <h2>Orden de Compra</h2>
@@ -29,9 +29,9 @@
             @Html.DisplayFor(modelItem => item.dtFecha)
         </td>
         <td>
-            @Html.ActionLink("Edit", "Edit", new { id=item.idOrden }) |
-            @Html.ActionLink("Details", "Details", new { id=item.idOrden }) |
-            @Html.ActionLink("Delete", "Delete", new { id=item.idOrden })
+            @Html.ActionLink("Editar", "Edit", new { id=item.idOrden }) |
+            @Html.ActionLink("Detalle", "Details", new { id=item.idOrden }) |
+            @Html.ActionLink("Eliminar", "Delete", new { id=item.idOrden })
         </td>
     </tr>
 }
